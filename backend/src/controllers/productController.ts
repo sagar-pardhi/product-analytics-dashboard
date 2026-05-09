@@ -195,7 +195,7 @@ export async function getAnalytics(req: Request, res: Response): Promise<void> {
         GROUP BY range ORDER BY MIN(discount_percentage)
       `),
       pool.query(`SELECT main_category as category, ROUND(AVG(rating)::numeric, 2) as avg_rating FROM products WHERE rating IS NOT NULL GROUP BY main_category ORDER BY avg_rating DESC LIMIT 15`),
-      pool.query(`SELECT COUNT(*) as total_products, ROUND(AVG(rating)::numeric, 2) as avg_rating, ROUND(AVG(discount_percentage * 100)::numeric, 1) as avg_discount_pct, SUM(rating_count) as total_reviews FROM products`),
+      pool.query(`SELECT COUNT(*) as total_products, ROUND(AVG(rating) FILTER (WHERE rating IS NOT NULL)::numeric, 1) as avg_rating, ROUND(AVG(discount_percentage * 100) FILTER (WHERE discount_percentage IS NOT NULL)::numeric, 1) as avg_discount_pct, COALESCE(SUM(rating_count), 0) as total_reviews FROM products`),
     ]);
 
     res.json({

@@ -12,10 +12,34 @@ interface Props {
 }
 
 const cards = [
-  { key: 'total_products', label: 'Total Products', icon: InventoryIcon, color: '#3b82f6', format: (v: number) => v.toLocaleString() },
-  { key: 'avg_rating', label: 'Avg Rating', icon: StarIcon, color: '#f59e0b', format: (v: number) => `${v} ★` },
-  { key: 'avg_discount_pct', label: 'Avg Discount', icon: LocalOfferIcon, color: '#10b981', format: (v: number) => `${v}%` },
-  { key: 'total_reviews', label: 'Total Reviews', icon: RateReviewIcon, color: '#8b5cf6', format: (v: number) => v?.toLocaleString() ?? 'N/A' },
+  {
+    key: 'total_products',
+    label: 'Total Products',
+    icon: InventoryIcon,
+    color: '#3b82f6',
+    format: (v: number | null) => (v != null ? Number(v).toLocaleString() : '0'),
+  },
+  {
+    key: 'avg_rating',
+    label: 'Avg Rating',
+    icon: StarIcon,
+    color: '#f59e0b',
+    format: (v: number | null) => (v != null ? `${Number(v).toFixed(1)} ★` : 'N/A'),
+  },
+  {
+    key: 'avg_discount_pct',
+    label: 'Avg Discount',
+    icon: LocalOfferIcon,
+    color: '#10b981',
+    format: (v: number | null) => (v != null ? `${Number(v).toFixed(1)}%` : 'N/A'),
+  },
+  {
+    key: 'total_reviews',
+    label: 'Total Reviews',
+    icon: RateReviewIcon,
+    color: '#8b5cf6',
+    format: (v: number | null) => (v != null ? Number(v).toLocaleString() : 'N/A'),
+  },
 ];
 
 export default function SummaryCards({ summary, loading }: Props) {
@@ -33,7 +57,7 @@ export default function SummaryCards({ summary, loading }: Props) {
                 <Skeleton width={80} height={32} />
               ) : (
                 <Typography variant="h5" fontWeight={700}>
-                  {summary ? format(summary[key as keyof Summary] as number) : '—'}
+                  {summary ? format(summary[key as keyof Summary] as number | null) : '—'}
                 </Typography>
               )}
             </Box>
